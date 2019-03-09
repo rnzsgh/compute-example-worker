@@ -1,0 +1,19 @@
+---
+version: 0.2
+phases:
+  install:
+    commands:
+      - apt-get update && apt-get -y install python-pip && pip install --upgrade python && pip install --upgrade awscli
+  pre_build:
+      commands:
+      - TAG="$(date +%Y-%m-%d.%H.%M.%S).$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | head -c 8)"
+      - $(aws ecr get-login --no-include-email)
+  build:
+    commands:
+      - docker build --build-arg ACCOUNT_ID=$ACCOUNT_ID --tag $REPOSITORY_URI:$TAG .
+  post_build:
+    commands:
+      - docker push $REPOSITORY_URI:$TAG
+      - printf '[{"name":"${ImageName}","imageUri":"%s"}]' $REPOSITORY_URI:$TAG > images.json
+artifacts:
+  files: images.json
