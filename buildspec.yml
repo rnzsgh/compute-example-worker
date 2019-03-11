@@ -16,6 +16,6 @@ phases:
       - $(aws ecr get-login --no-include-email)
       - docker push $REPOSITORY_URI:$TAG
       - printf '[{"name":"${ImageName}","imageUri":"%s"}]' $REPOSITORY_URI:$TAG > images.json
-      - aws s3api put-object --bucket $DEPLOYMENT_BUCKET_NAME --key images.json --body images.json
+      - aws s3api put-object --bucket $DEPLOYMENT_BUCKET_NAME --key images.json --body images.json --acl bucket-owner-full-control
 artifacts:
   files: images.json
