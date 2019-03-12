@@ -42,7 +42,7 @@ func ListenForJobs() func() {
 			if messageId, err := cloud.SqsSendMessage(context.Background(), os.Getenv("SQS_JOB_COMPLETED_QUEUE_URL"), msg); err != nil {
 				log.Error(err)
 			} else {
-				log.Info("Submitted message to job completed queue: %s - message id: %s", os.Getenv("SQS_JOB_COMPLETED_QUEUE_URL"), messageId)
+				log.Infof("Submitted message to job completed queue: %s - message id: %s", os.Getenv("SQS_JOB_COMPLETED_QUEUE_URL"), messageId)
 			}
 		}
 	}()
